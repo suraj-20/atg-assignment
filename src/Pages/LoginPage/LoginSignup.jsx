@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import "./SignupPopup.css";
-import { Link } from "react-router-dom";
+import "./LoginSignup.css";
 import image from "../../Assets/signup-OCG-APNN.svg";
+import { Link } from "react-router-dom";
 
-const SigninPopup = ({ onClose }) => {
-  const [state, setState] = useState("login");
+const LoginSignup = () => {
+  const [state, setState] = useState("Login");
   const [formData, setFormData] = useState({
     username: "",
     email: "",
@@ -33,9 +33,11 @@ const SigninPopup = ({ onClose }) => {
         .catch((error) => console.log(error));
 
       if (responseData.message) {
-        localStorage.setItem("Authorization", responseData.token);
+        localStorage.setItem("token", responseData.token);
+        alert(responseData.message);
         window.location.replace("/login");
-        // setErrorMessage(responseData.message);
+      } else {
+        alert(responseData.message);
       }
     } catch (error) {
       console.error("Error in user signed in.", error);
@@ -47,7 +49,7 @@ const SigninPopup = ({ onClose }) => {
 
     let responseData;
     // console.log(process.env.REACT_APP_BASE_URL);
-    await fetch(`http//localhost:5000/api/v1/login`, {
+    await fetch(`http://localhost:5000/api/v1/login`, {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -63,33 +65,60 @@ const SigninPopup = ({ onClose }) => {
       .catch((error) => console.error("Error in logged in", error));
 
     if (responseData.user) {
-      localStorage.setItem("Authorization", responseData.token);
+      localStorage.setItem("token", responseData.token);
+      alert(responseData.message);
       window.location.replace("/");
+    } else {
+      alert(responseData.message);
+    }
+  };
+
+  const forgotPasswordForm = async () => {
+    console.log("User logged in", formData);
+
+    let responseData;
+    // console.log(process.env.REACT_APP_BASE_URL);
+    await fetch(`http://localhost:5000/api/v1/forgot-password`, {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(formData),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        responseData = data;
+        console.log(data);
+      })
+      .catch((error) => console.error("Error in logged in", error));
+
+    if (responseData.message) {
+      alert(responseData.message);
+    } else {
+      alert(responseData.message);
     }
   };
 
   return (
-    <div className={`popup signup-popup show d-none d-lg-flex`}>
-      <button onClick={onClose} className="btn close-btn position-absolute">
-        &times;
-      </button>
+    <div className={`popup signup-popup show d-lg-flex`}>
       <div className="modal-content">
         <div className="modal-header custom-modal-header d-flex justify-content-center mb-4 ">
           Let's learn, share & inspire each other with our passion for computer
           engineering. Sign up now 🤘🏼
         </div>
-        <div className="px-4">
+        <div className="p-4">
           <div className="d-flex justify-content-between  align-items-center mb-4">
             <h4 className="d-flex fw-bold">
-              {state === "login" ? "Create Account" : "Sign in"}
+              {state === "signup" ? "Create Account" : "Sign in"}
             </h4>
-            {state === "login" ? (
-              <button onClick={() => setState("Signup")} className="btn">
+            {state === "signup" ? (
+              <button onClick={() => setState("login")} className="btn">
                 Already have an account?
-                <span className="text-primary"> Sign in</span>
+                <span className="text-primary"> Login</span>
               </button>
             ) : (
-              <button onClick={() => setState("login")} className="btn">
+              <button onClick={() => setState("signup")} className="btn">
                 Create new Account?
                 <span className="text-primary"> Sign Up</span>
               </button>
@@ -99,7 +128,11 @@ const SigninPopup = ({ onClose }) => {
             action=""
             onSubmit={(e) => {
               e.preventDefault();
-              state === "Login" ? login() : signup();
+              state === "Login"
+                ? login()
+                : state === "signup"
+                ? signup()
+                : forgotPasswordForm();
             }}
             encType="multipart/form-data"
           >
@@ -107,7 +140,7 @@ const SigninPopup = ({ onClose }) => {
               <div className="row">
                 <div className="col">
                   <div className="d-flex flex-column gap-2">
-                    {state === "login" ? (
+                    {state === "signup" ? (
                       <input
                         value={formData.name}
                         onChange={handleChange}
@@ -118,7 +151,7 @@ const SigninPopup = ({ onClose }) => {
                         required
                       />
                     ) : (
-                      ""
+                      <></>
                     )}
                     <input
                       value={formData.email}
@@ -134,13 +167,24 @@ const SigninPopup = ({ onClose }) => {
                       name="password"
                       type="password"
                       className={`form-control custom-input ${
-                        state === "forgotPassword" ? "hidden" : ""
+                        state === "forgotPassword"
+                          ? "hidden"
+                          : state === "resetPassword"
+                          ? "show"
+                          : ""
                       }`}
                       placeholder="Password"
                     />
-                    <button className="btn btn-primary rounded-5 d-flex justify-content-center align-items-center mb-4">
-                      Continue
-                    </button>
+
+                    {state === "forgotPassword" ? (
+                      <button className="btn btn-primary rounded-5 d-flex justify-content-center align-items-center mb-4">
+                        Forgot
+                      </button>
+                    ) : (
+                      <button className="btn btn-primary rounded-5 d-flex justify-content-center align-items-center mb-4">
+                        {state === "signup" ? "Signup" : "Login"}
+                      </button>
+                    )}
                     <div className="d-flex flex-column gap-2">
                       <button
                         type="submit"
@@ -159,14 +203,14 @@ const SigninPopup = ({ onClose }) => {
                     </div>
                     <Link
                       onClick={() => setState("forgotPassword")}
-                      className="btn d-none d-lg-block text-center forgot"
+                      className="btn d-lg-block text-center forgot"
                     >
                       Forgot Password?
                     </Link>
                   </div>
                 </div>
-                <div className="col">
-                  <div className="d-flex flex-column">
+                <div className="col d-none d-lg-flex">
+                  <div className="d-flex  flex-column">
                     <img src={image} alt="" />
                     <p className="info-signup">
                       By signing up, you agree to our Terms & conditions,
@@ -183,4 +227,4 @@ const SigninPopup = ({ onClose }) => {
   );
 };
 
-export default SigninPopup;
+export default LoginSignup;

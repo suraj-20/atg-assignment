@@ -7,7 +7,7 @@ const SignupMobileView = ({ onClose }) => {
       <div className="d-flex justify-content-between  align-items-center mb-4">
         <h4 className="d-flex fw-bold">Create Account</h4>
         <button onClick={onClose} className="btn closeBtn position-absolute">
-          <i class="fa-solid fa-circle-xmark"></i>
+          <i className="fa-solid fa-circle-xmark"></i>
         </button>
       </div>
       <div className="d-flex">
@@ -63,10 +63,10 @@ const SignupMobileView = ({ onClose }) => {
       </ul>
       <div className="d-flex flex-column gap-2">
         <button className="btn d-flex align-items-center justify-content-center gap-2 button-signup-group">
-          <i class="fa-brands fa-facebook"></i> Sign In with Facebook
+          <i className="fa-brands fa-facebook"></i> Sign In with Facebook
         </button>
         <button className="btn d-flex align-items-center gap-2 button-signup-group justify-content-center">
-          <i class="fa-brands fa-google"></i> Sign In with Google
+          <i className="fa-brands fa-google"></i> Sign In with Google
         </button>
       </div>
       <p className="info-signup text-center">

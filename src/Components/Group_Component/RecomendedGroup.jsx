@@ -32,7 +32,7 @@ const RecomendedGroup = () => {
     <>
       <div className="d-flex justify-content-between">
         <div className="d-flex align-items-center gap-3">
-          <i class="fa-solid fa-location-dot"></i>
+          <i className="fa-solid fa-location-dot"></i>
           <input
             type="text"
             className="input-text"
@@ -42,25 +42,25 @@ const RecomendedGroup = () => {
           />
         </div>
         <button className="btn">
-          <i class="fa-solid fa-pen"></i>
+          <i className="fa-solid fa-pen"></i>
         </button>
       </div>
       <hr className="my-1" />
       <div className="d-flex align-items-center gap-2 mb-4">
-        <i class="fa-solid fa-circle-info"></i>
+        <i className="fa-solid fa-circle-info"></i>
         <p className="location-info">
           Your location will help us serve better and extend a personalised
           experience.
         </p>
       </div>
       <div className="d-flex align-items-center gap-2 text-capitalize mb-3">
-        <i class="fa-solid fa-thumbs-up"></i>
+        <i className="fa-solid fa-thumbs-up"></i>
         <span className="text-recommended">REcommended Groups</span>
       </div>
       <div className="d-flex flex-column gap-4">
         {cardObj.map((card, i) => {
           return (
-            <div className="d-flex align-items-center justify-content-between">
+            <div key={card.id} className="d-flex align-items-center justify-content-between">
               <div className="d-flex align-items-center gap-2">
                 <img
                   src={card.user_image}

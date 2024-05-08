@@ -1,88 +1,153 @@
-import React from "react";
-import image1 from "../../Assets/nature-rDsfVg8l.jpg";
-import image2 from "../../Assets/wood-SIbopgrg.jpg";
-import image3 from "../../Assets//car-kZ9O3U5Q.jpg";
-import user_profile1 from "../../Assets/user1-COSOQoOX.jpg";
-import user_profile2 from "../../Assets/15d7211204149d93adda6dfafb5d81f2-08Q1wamp.jpg";
-import user_profile3 from "../../Assets/c3ac7682e52df2e10d0a36ec3f243a44-6fhMyk-S.jpg";
-import user_profile4 from "../../Assets/siddrath-t0piMZRc.jpg";
-import { IoShareSocialSharp } from "react-icons/io5";
-
-const cardObj = [
-  {
-    id: 1,
-    project_name: "✍️ Article",
-    project_image: image1,
-    card_heading:
-      " What if famous brands had regular fonts? Meet RegulaBrands!",
-    project_pera:
-      "I’ve worked in UX for the better part of a decade. From now on,I plan to rei…",
-    user_profile: user_profile1,
-    user_name: "Siddharth Goyal",
-  },
-  {
-    id: 2,
-    project_name: "🔬️ Education",
-    project_image: image2,
-    card_heading:
-      "Tax Benefits for Investment under National Pension Scheme launched by Government",
-    project_pera:
-      "I’ve worked in UX for the better part of a decade. From now on,I plan to rei…",
-    user_profile: user_profile2,
-    user_name: "Siddharth Goyal",
-  },
-  {
-    id: 3,
-    project_name: "🗓️ Meetup",
-    project_image: image3,
-    card_heading: " Finance & Investment Elite Social Mixer @Lujiazui",
-    card_desc: "Fri, 12 Oct, 2018",
-    user_location: "Ahmedabad, India",
-    icon1: <i class="fa-regular fa-calendar"></i>,
-    icon2: <i class="fa-solid fa-location-dot"></i>,
-    user_profile: user_profile3,
-    user_name: "Siddharth Goyal",
-    card_button: "Visit WebSite",
-  },
-  {
-    id: 4,
-    project_name: "💼️ Job",
-    card_heading: "Software Developer",
-    card_desc: "Innovaccer Analytics Private Ltd.",
-    user_location: "Noida, India",
-    icon1: <i class="fa-regular fa-calendar"></i>,
-    icon2: <i class="fa-solid fa-location-dot"></i>,
-    user_profile: user_profile4,
-    card_button: "Apply on Timejobs",
-    user_name: "Siddharth Goyal",
-  },
-];
+import React, { useEffect, useState } from "react";
+import { FaComment } from "react-icons/fa";
+import { FaTrash } from "react-icons/fa";
+import { FaRegThumbsUp } from "react-icons/fa";
 
 const PostCard = () => {
+  const [allPosts, setAllPosts] = useState([]);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    // Check authentication status when the component mounts
+    // Example: Check if there's a token in localStorage or cookies
+    const token = localStorage.getItem("token");
+    setIsLoggedIn(!!token); // Set isLoggedIn to true if token exists
+  }, []);
+
+  const fetchInfo = async () => {
+    await fetch(`http://localhost:5000/api/v1/posts`)
+      .then((res) => res.json())
+      .then((data) => {
+        setAllPosts(data.allPosts);
+        // setAllPosts(allPosts);
+        console.log(data);
+      });
+  };
+
+  useEffect(() => {
+    fetchInfo();
+  }, []);
+
+  const removeProduct = async (postId) => {
+    if (!isLoggedIn) {
+      // User is not logged in, prevent deletion and prompt to log in
+      alert("Please log in to delete posts.");
+      return;
+    }
+    try {
+      if (localStorage.getItem("token")) {
+        await fetch(`http://localhost:5000/api/v1/posts/${postId}`, {
+          method: "DELETE",
+          headers: {
+            Accept: "application/json",
+            token: `${localStorage.getItem("token")}`,
+            "Content-Type": "application/json",
+          },
+          // body: JSON.stringify({ postId }),
+        });
+        await fetchInfo();
+      }
+    } catch (error) {
+      console.error("Error deleting post:", error);
+    }
+  };
+
+  const handleLike = async (postId) => {
+    if (!isLoggedIn) {
+      // User is not logged in, prevent liking and prompt to log in
+      alert("Please log in to like posts.");
+      return;
+    }
+    try {
+      if (localStorage.getItem("token")) {
+        const response = await fetch(
+          `http://localhost:5000/api/v1/posts/${postId}/like`,
+          {
+            method: "POST",
+            token: `${localStorage.getItem("token")}`,
+            "Content-Type": "application/json",
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error("Failed to like post");
+        }
+
+        // Update the local state with the new like count
+        const updatedPosts = allPosts.map((allPosts) =>
+          allPosts._id === postId
+            ? { ...allPosts, likes: allPosts.likes + 1 }
+            : allPosts
+        );
+        setAllPosts(updatedPosts);
+      }
+    } catch (error) {
+      console.error("Error liking post:", error);
+    }
+  };
+
+  const handleComment = async (postId) => {
+    const comment = window.prompt("Enter your comment");
+
+    if (comment) {
+      try {
+        if (localStorage.getItem("token")) {
+          const response = await fetch(
+            `http://localhost:5000/api/v1/posts/${postId}/comment`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                token: `${localStorage.getItem("token")}`,
+              },
+            }
+          );
+
+          if (!response.ok) {
+            throw new Error("Failed to add comment");
+          }
+
+          // Update the local state with the new comment
+          const updatedPosts = allPosts.map((allPosts) =>
+            allPosts._id === postId
+              ? { ...allPosts, comments: [...allPosts.comments, comment] }
+              : allPosts
+          );
+
+          if (response.ok) {
+            alert("Comment added successfully");
+            setAllPosts(updatedPosts);
+          }
+        }
+      } catch (error) {
+        console.error("Error adding comment:", error);
+      }
+    }
+  };
+
   return (
     <>
-      {cardObj.map((card, i) => {
+      {allPosts.map((card, i) => {
         return (
           <>
-            <div className="card-container d-flex flex-column border border-1 rounded-2">
+            <div
+              key={card._id}
+              className="card-container d-flex flex-column border border-1 rounded-2"
+            >
               <img
-                src={card.project_image}
-                style={
-                  card.project_image
-                    ? { display: "block" }
-                    : { display: "none" }
-                }
+                src={card.image}
+                style={card.image ? { display: "block" } : { display: "none" }}
                 alt=""
                 className="imagePost"
               />
               <div className="p-4">
-                <h3 className="d-flex">{card.project_name}</h3>
+                <h3 className="d-flex">{card.title}</h3>
                 <div className="d-flex gap-6 justify-content-between">
-                  <h4>{card.card_heading}</h4>
+                  <h4>{card.content}</h4>
                   <div className="btn align-self-start">
                     <div className="dropdown">
                       <div typeof="button">
-                        <i class="fa-solid fa-ellipsis"></i>
+                        <i className="fa-solid fa-ellipsis"></i>
                       </div>
                     </div>
                   </div>
@@ -91,73 +156,41 @@ const PostCard = () => {
                   <li
                     className="d-flex align-items-center gap-1"
                     style={
-                      card.card_desc
+                      card.description
                         ? { display: "block" }
                         : { display: "none" }
                     }
                   >
-                    {card.icon1} {card.card_desc}
-                  </li>
-                  <li
-                    className="d-flex align-items-center gap-1"
-                    style={
-                      card.user_location
-                        ? { display: "block" }
-                        : { display: "none" }
-                    }
-                  >
-                    {card.icon2}
-                    {card.user_location}
+                    {card.icon1} {card.description}
                   </li>
                 </ul>
-                <button
-                  className="custom-post-link btn mb-4 fw-semibold"
-                  style={
-                    // card.card_button
-                    //   ? { display: "block" }
-                    //   : { display: "none" }
-
-                    card.card_button
-                      ? { display: "block", color: "orange" }
-                      : { display: "none", color: "green" }
-                  }
-                >
-                  {card.card_button}
-                </button>
-                <p
-                  style={
-                    card.project_pera
-                      ? { display: "block" }
-                      : { display: "none" }
-                  }
-                >
-                  {card.project_pera}
-                </p>
                 <div className="d-flex justify-content-between align-items-center">
-                  <div className="d-flex align-items-center gap-2">
-                    <img
-                      src={card.user_profile}
-                      className="rounded-circle"
-                      alt=""
-                      width={48}
-                      height={48}
-                    />
-                    <div className="d-flex flex-column">
-                      <div className="text-wrapper">{card.user_name}</div>
-                      <div className="d-lg-none">
-                        <i class="fa-solid fa-eye"></i>
-                        <span>1.4k views</span>
-                      </div>
-                    </div>
-                  </div>
                   <div className="d-flex justify-content-between align-items-center">
                     <div className="d-none d-lg-block pe-4">
-                      <i class="fa-solid fa-eye"></i>
+                      <i className="fa-solid fa-eye"></i>
                       <span>1.4k views</span>
                     </div>
-                    <button className="btn d-flex align-items-center gap-2">
-                      <IoShareSocialSharp /> Share
+                    <button
+                      onClick={() => removeProduct(card._id)}
+                      className="btn d-flex align-items-center gap-2"
+                    >
+                      <FaTrash /> Delete
                     </button>
+                    <button
+                      onClick={() => handleLike(card._id)}
+                      className="btn d-flex align-items-center gap-2"
+                    >
+                      <FaRegThumbsUp /> Like ({card.likes})
+                    </button>
+                    <button
+                      onClick={() => handleComment(card._id)}
+                      className="btn d-flex align-items-center gap-2"
+                    >
+                      <FaComment /> Comment
+                    </button>
+                    {/* {card.comments.map((comment, index) => (
+                      <span key={index}>{comment}</span>
+                    ))} */}
                   </div>
                 </div>
               </div>
@@ -165,6 +198,11 @@ const PostCard = () => {
           </>
         );
       })}
+      {/* <ul>
+        {allPosts.comments?.map((comment, index) => (
+          <li key={index}>{comment}</li>
+        ))}
+      </ul> */}
     </>
   );
 };

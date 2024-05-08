@@ -46,6 +46,10 @@
   transition: transform 0.3s ease;
 }
 
+.hidden {
+  display: none;
+}
+
 @media screen and (max-width: 992px) {
   .background-text-home {
     justify-content: space-between;

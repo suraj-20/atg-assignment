@@ -7,7 +7,7 @@ const Hero = () => {
       <div className="d-flex d-lg-none justify-content-between mt-3">
         <button className="left-arrow-btn">
           {" "}
-          <i class="fa-solid fa-arrow-left"></i>
+          <i className="fa-solid fa-arrow-left"></i>
         </button>
         <button className="btn join-group">Leave Group</button>
       </div>

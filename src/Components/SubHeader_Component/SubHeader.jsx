@@ -8,7 +8,7 @@ const SubHeader = () => {
         <ul className="nav my-2  nav-underline">
           <li className="nav-item">
             <a href="/" className="nav-link active">
-              All Post (312)
+              All Post (22)
             </a>
           </li>
           <li className="nav-item">
@@ -34,10 +34,10 @@ const SubHeader = () => {
         </ul>
         <div className="d-flex my-2 d-none d-lg-flex align-items-center">
           <button type="button" className="btn btn-filter">
-            Write Post <i class="fa-solid fa-sort-down"></i>
+            Write Post <i className="fa-solid fa-sort-down"></i>
           </button>
           <button className="btn btn-primary ms-2 gap-2 d-flex align-items-center">
-            <i class="fa-solid fa-user-plus"></i> Join Group
+            <i className="fa-solid fa-user-plus"></i> Join Group
           </button>
         </div>
       </div>
@@ -46,7 +46,7 @@ const SubHeader = () => {
         <div className="text-main-posts">Post(354)</div>
         <div className="d-flex my-2 d-flex align-items-center">
           <button type="button" className="btn btn-filter d-flex gap-2 align-items-center">
-            Filter : All <i class="fa-solid fa-sort-down"></i>
+            Filter : All <i className="fa-solid fa-sort-down"></i>
           </button>
         </div>
       </div>

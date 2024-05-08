@@ -84,11 +84,23 @@
 }
 
 .close-btn:hover {
-    background: #fff;
+  background: #fff;
 }
 
-@media screen and (max-width:1200px) {
-    .popup {
-        width: 70%;
-    }
+.forgotBtn {
+  position: relative;
+  bottom: 80px;
+  left: 100px;
+}
+
+@media screen and (max-width: 1200px) {
+  .popup {
+    width: 70%;
+  }
+
+  .forgotBtn {
+    position: relative;
+    bottom: 40px;
+    left: 80px;
+  }
 }
