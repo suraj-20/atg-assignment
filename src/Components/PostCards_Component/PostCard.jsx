@@ -129,73 +129,71 @@ const PostCard = () => {
     <>
       {allPosts.map((card, i) => {
         return (
-          <>
-            <div
-              key={card._id}
-              className="card-container d-flex flex-column border border-1 rounded-2"
-            >
-              <img
-                src={card.image}
-                style={card.image ? { display: "block" } : { display: "none" }}
-                alt=""
-                className="imagePost"
-              />
-              <div className="p-4">
-                <h3 className="d-flex">{card.title}</h3>
-                <div className="d-flex gap-6 justify-content-between">
-                  <h4>{card.content}</h4>
-                  <div className="btn align-self-start">
-                    <div className="dropdown">
-                      <div typeof="button">
-                        <i className="fa-solid fa-ellipsis"></i>
-                      </div>
+          <div
+            key={card._id}
+            className="card-container d-flex flex-column border border-1 rounded-2"
+          >
+            <img
+              src={card.image}
+              style={card.image ? { display: "block" } : { display: "none" }}
+              alt=""
+              className="imagePost"
+            />
+            <div className="p-4">
+              <h3 className="d-flex">{card.title}</h3>
+              <div className="d-flex gap-6 justify-content-between">
+                <h4>{card.content}</h4>
+                <div className="btn align-self-start">
+                  <div className="dropdown">
+                    <div typeof="button">
+                      <i className="fa-solid fa-ellipsis"></i>
                     </div>
-                  </div>
-                </div>
-                <ul className="d-flex align-items-center gap-5 list-unstyled ">
-                  <li
-                    className="d-flex align-items-center gap-1"
-                    style={
-                      card.description
-                        ? { display: "block" }
-                        : { display: "none" }
-                    }
-                  >
-                    {card.icon1} {card.description}
-                  </li>
-                </ul>
-                <div className="d-flex justify-content-between align-items-center">
-                  <div className="d-flex justify-content-between align-items-center">
-                    <div className="d-none d-lg-block pe-4">
-                      <i className="fa-solid fa-eye"></i>
-                      <span>1.4k views</span>
-                    </div>
-                    <button
-                      onClick={() => removeProduct(card._id)}
-                      className="btn d-flex align-items-center gap-2"
-                    >
-                      <FaTrash /> Delete
-                    </button>
-                    <button
-                      onClick={() => handleLike(card._id)}
-                      className="btn d-flex align-items-center gap-2"
-                    >
-                      <FaRegThumbsUp /> Like ({card.likes})
-                    </button>
-                    <button
-                      onClick={() => handleComment(card._id)}
-                      className="btn d-flex align-items-center gap-2"
-                    >
-                      <FaComment /> Comment
-                    </button>
-                    {/* {card.comments.map((comment, index) => (
-                      <span key={index}>{comment}</span>
-                    ))} */}
                   </div>
                 </div>
               </div>
+              <ul className="d-flex align-items-center gap-5 list-unstyled ">
+                <li
+                  className="d-flex align-items-center gap-1"
+                  style={
+                    card.description
+                      ? { display: "block" }
+                      : { display: "none" }
+                  }
+                >
+                  {card.icon1} {card.description}
+                </li>
+              </ul>
+              <div className="d-flex justify-content-between align-items-center">
+                <div className="d-flex justify-content-between align-items-center">
+                  <div className="d-none d-lg-block pe-4">
+                    <i className="fa-solid fa-eye"></i>
+                    <span>1.4k views</span>
+                  </div>
+                  <button
+                    onClick={() => removeProduct(card._id)}
+                    className="btn d-flex align-items-center gap-2"
+                  >
+                    <FaTrash /> Delete
+                  </button>
+                  <button
+                    onClick={() => handleLike(card._id)}
+                    className="btn d-flex align-items-center gap-2"
+                  >
+                    <FaRegThumbsUp /> Like ({card.likes})
+                  </button>
+                  <button
+                    onClick={() => handleComment(card._id)}
+                    className="btn d-flex align-items-center gap-2"
+                  >
+                    <FaComment /> Comment
+                  </button>
+                  {/* {card.comments.map((comment, index) => (
+                      <span key={index}>{comment}</span>
+                    ))} */}
+                </div>
+              </div>
             </div>
-          </>
+          </div>
         );
       })}
       {/* <ul>

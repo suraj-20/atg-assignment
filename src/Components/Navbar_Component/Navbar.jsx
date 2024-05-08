@@ -1,12 +1,10 @@
-import React, { useState } from "react";
+import React from "react";
 import "./Navbar.css";
 import logo_image from "../../Assets/whole.png";
-// import SigninPopup from "../Popup/SigninPopup";
 import { Link } from "react-router-dom";
 
 const Navbar = () => {
   // const [showPopup, setShowPopup] = useState(false);
-  const [posts, setPosts] = useState([]);
 
   // const handleTogglePopup = () => {
   //   setShowPopup(!showPopup);
@@ -20,19 +18,15 @@ const Navbar = () => {
   //   }
   // };
 
-  const handleAddPost = (newPost) => {
-    setPosts([...posts, newPost]);
-  };
-
   return (
     <>
-      <div className="navbar_container container d-none d-lg-flex align-items-center justify-content-between p-3">
+      <div className="navbar_container container d-lg-flex align-items-center justify-content-between p-3">
         <div className="logo_image">
           <a href="/">
             <img src={logo_image} alt="" />
           </a>
         </div>
-        <div className="search_bar d-flex">
+        <div className="search_bar d-none d-lg-flex">
           <i className="fa-solid fa-magnifying-glass"></i>
           <input
             className=" custom-input-search"
@@ -41,10 +35,9 @@ const Navbar = () => {
             placeholder="Search for your favorite groups in ATG"
           />
         </div>
-        <div className="create_account_btn d-flex gap-5">
+        <div className="create_account_btn d-flex gap-5 align-items-center">
           <div className="row">
             <Link
-              onAddPost={handleAddPost}
               to={"/add-post"}
               className="btn custom-btn-create p-0 m-0"
               type="submit"
